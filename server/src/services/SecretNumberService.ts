@@ -6,6 +6,30 @@ class SecretNumberService {
   private _PRESENTED_SYMBOL:string = 'K';
 
   /**
+   * Получить значение угаданного символа
+   * @type {String}
+   */
+  get correctedSymbol (): string {
+    return this._CORRECTED_SYMBOL;
+  }
+
+  /**
+   * Получить значение существующего символа
+   * @type {String}
+   */
+  get presentedSymbol (): string {
+    return this._PRESENTED_SYMBOL
+  }
+
+  /**
+   * Получить кол-во символов по-умолчанию
+   * @type {Number}
+   */
+  get defaultCountMembers (): number {
+    return this._DEFAULT_COUNT_NUMBERS;
+  }
+
+  /**
    * Получить случайно число в диапазоне двух чисел
    * @private
    * @param min {Number} - минимальное число
@@ -53,5 +77,6 @@ class SecretNumberService {
         return num
       }).join('')
   }
-
 }
+
+export default new SecretNumberService();
