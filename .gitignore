@@ -1,0 +1,13 @@
+server/node_modules
+server/package-lock.json
+server/build
+
+client/node_modules
+client/package-lock.json
+package-lock.json
+
+server/build
+node_modules
+
+.idea
+*.log
