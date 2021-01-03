@@ -17,7 +17,7 @@ class DB {
     this.connect();
   }
 
-  public connect (): void {
+  public async connect (): Promise<void> {
     this.pool = new Pool(this._databaseConfig);
   }
 }

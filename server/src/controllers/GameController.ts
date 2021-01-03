@@ -7,15 +7,15 @@ class GameController {
   constructor () {
     this._router = Router();
 
-    this._router.post('/start', this.start);
-    this._router.post('/move', this.move);
+    this._router.post('/start', this._start);
+    this._router.post('/move', this._move);
   }
 
   public getRouter (): Router {
     return this._router;
   }
 
-  public start (req: Request, res: Response, next: NextFunction): Response | void {
+  private _start (req: Request, res: Response, next: NextFunction): Response | void {
     const secretNumber: string = SecretNumberService.generateSecretNumber();
 
     return res.status(201).send({
@@ -24,7 +24,7 @@ class GameController {
     });
   }
 
-  public move (req: Request, res: Response, next: NextFunction): Response | void {
+  private _move (req: Request, res: Response, next: NextFunction): Response | void {
 
   }
 }
