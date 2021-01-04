@@ -1,21 +1,16 @@
-import { Request, Response, NextFunction, Router } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import BaseController from './BaseController';
 import UserService from '../services/UserService';
 import AuthService from '../services/AuthService';
 import { HttpStatus } from '../helpers/HttpStatus';
 import * as bcrypt from 'bcrypt';
 
-class AuthController {
-  private _router: Router;
-
+class AuthController extends BaseController {
   constructor () {
-    this._router = Router();
+    super();
 
-    this._router.post('/login', this._login);
-    this._router.post('/registration', this._registration);
-  }
-
-  public getRouter (): Router {
-    return this._router;
+    this.router.post('/login', this._login);
+    this.router.post('/registration', this._registration);
   }
 
   private async _login (req: Request, res: Response, next: NextFunction): Promise<Response | void> {

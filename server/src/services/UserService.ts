@@ -1,7 +1,6 @@
 import DB from '../db/Postgre';
 import { QueryResult } from 'pg';
 import * as bcrypt from 'bcrypt';
-import has = Reflect.has;
 
 type SqlQuery = string
 
@@ -52,9 +51,8 @@ class UserService {
     try {
       const { name, login, password } = user;
       const hashedPassword: string = bcrypt.hashSync(password, 10);
-      console.log(hashedPassword);
 
-      const result: QueryResult = await DB.pool.query(
+      await DB.pool.query(
         CREATE_USER_QUERY,
         [name, login, hashedPassword]
       );

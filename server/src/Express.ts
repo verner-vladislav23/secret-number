@@ -1,8 +1,8 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import GameController from './controllers/GameController';
-import AuthController from './controllers/AuthController';
+import gameController from './controllers/GameController';
+import authController from './controllers/AuthController';
 
 class Express {
   public app: express.Application;
@@ -18,11 +18,11 @@ class Express {
   }
 
   private applyRoutes(): void {
-    const authRouter = AuthController.getRouter();
-    const gameRouter = GameController.getRouter();
+    const authRouter = authController.getRouter();
+    const gameRouter = gameController.getRouter();
 
-    this.app.use('/api/v1/game', gameRouter);
     this.app.use('/api/v1/auth', authRouter);
+    this.app.use('/api/v1/game', gameRouter);
   }
 }
 

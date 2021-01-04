@@ -1,31 +1,57 @@
-import { Request, Response, NextFunction, Router } from 'express';
-import SecretNumberService from '../services/SecretNumberService';
+import { Request, Response, NextFunction } from 'express';
+import BaseController from './BaseController';
+import GameService from '../services/GameService';
+import { HttpStatus } from '../helpers/HttpStatus';
+import authenticate from '../middleware/authenticate';
 
-class GameController {
-  private _router: Router;
+interface ModifiedRequest extends Request {
+  user?: any;
+}
 
+class GameController extends BaseController {
   constructor () {
-    this._router = Router();
+    super();
 
-    this._router.post('/start', this._start);
-    this._router.post('/move', this._move);
+    this.router.post('/start', authenticate, this._start);
+    this.router.post('/:id/move', authenticate, this._move);
   }
 
-  public getRouter (): Router {
-    return this._router;
+  private async _start (req: ModifiedRequest, res: Response, next: NextFunction): Promise<Response> {
+    const { level } = req.body;
+    const { user } = req;
+
+    try {
+      // const gameId = 11;
+      const gameId: number = await GameService.createGame(user.id, level);
+
+      return res
+        .status(HttpStatus.CREATED)
+        .send({
+          gameId,
+          message: 'Game started'
+        })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  private _start (req: Request, res: Response, next: NextFunction): Response | void {
-    const secretNumber: string = SecretNumberService.generateSecretNumber();
+  private async _move (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    const { secretNumber } = req.body;
+    const gameId = req.params.id;
 
-    return res.status(201).send({
-      test: 300,
-      secretNumber
-    });
-  }
+    try {
+      const { comparedNumber, finished }
+      : ({ comparedNumber: string, finished: boolean }) = await GameService.move(gameId, secretNumber);
 
-  private _move (req: Request, res: Response, next: NextFunction): Response | void {
-
+      return res
+        .status(HttpStatus.OK)
+        .send({
+          comparedNumber,
+          finished,
+        })
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 
