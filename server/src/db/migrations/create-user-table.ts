@@ -1,3 +1,4 @@
+import { QueryResult } from 'pg';
 import DB from '../Postgre';
 
 type SqlQuery = string
@@ -15,7 +16,7 @@ const createUserTable = async () => {
   `;
 
   try {
-    const result = await DB.pool.query(CREATE_USER_TABLE_QUERY);
+    const result: QueryResult = await DB.pool.query(CREATE_USER_TABLE_QUERY);
     console.log(result);
   } catch (error) {
     console.log(error);
@@ -27,7 +28,7 @@ const deleteUserTable = async () => {
   const DELETE_USER_TABLE_QUERY: SqlQuery = `DROP TABLE "User";`;
 
   try {
-    const result = await DB.pool.query(DELETE_USER_TABLE_QUERY);
+    const result: QueryResult = await DB.pool.query(DELETE_USER_TABLE_QUERY);
     console.log(result);
   } catch (error) {
     console.log(error);

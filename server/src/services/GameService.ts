@@ -1,11 +1,12 @@
 import DB from '../db/Postgre';
 import { QueryResult } from 'pg';
 import SecretNumberService from './SecretNumberService';
+import { Game } from '../db/models';
 
 type SqlQuery = string
 
 class GameService {
-  static async createGame (userId: number, level: number = 4): Promise<number> {
+  static async createGame (userId: number, level: number = 4): Promise<Game | undefined> {
     const CREATE_GAME_QUERY: SqlQuery = `
       INSERT INTO "Game" (user_id, secret_number, level)
       VALUES($1, $2, $3);
@@ -32,7 +33,7 @@ class GameService {
 
       const [lastGame] = result.rows;
 
-      return lastGame.id;
+      return lastGame;
     } catch (error) {
       console.log(error);
     }

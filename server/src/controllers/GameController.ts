@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
+
 import BaseController from './BaseController';
-import GameService from '../services/GameService';
+import { GameService } from '../services';
 import { HttpStatus } from '../helpers/HttpStatus';
+import { Game, User } from '../db/models';
 import authenticate from '../middleware/authenticate';
 
 interface ModifiedRequest extends Request {
@@ -18,16 +20,16 @@ class GameController extends BaseController {
 
   private async _start (req: ModifiedRequest, res: Response, next: NextFunction): Promise<Response> {
     const { level } = req.body;
-    const { user } = req;
+    const user:User = req.user;
 
     try {
       // const gameId = 11;
-      const gameId: number = await GameService.createGame(user.id, level);
+      const game: Game = await GameService.createGame(user.id, level);
 
       return res
         .status(HttpStatus.CREATED)
         .send({
-          gameId,
+          gameId: game.id,
           message: 'Game started'
         })
     } catch (error) {
@@ -35,7 +37,7 @@ class GameController extends BaseController {
     }
   }
 
-  private async _move (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  private async _move (req: Request, res: Response, next: NextFunction): Promise<Response> {
     const { secretNumber } = req.body;
     const gameId = req.params.id;
 

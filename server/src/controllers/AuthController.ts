@@ -1,19 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
-import BaseController from './BaseController';
-import UserService from '../services/UserService';
-import AuthService from '../services/AuthService';
-import { HttpStatus } from '../helpers/HttpStatus';
 import * as bcrypt from 'bcrypt';
+
+import BaseController from './BaseController';
+import { UserService, AuthService } from '../services';
+import { HttpStatus } from '../helpers/HttpStatus';
+import { loginSchema, registrationSchema } from '../schemas/auth';
+import validate from '../middleware/validate';
 
 class AuthController extends BaseController {
   constructor () {
     super();
 
-    this.router.post('/login', this._login);
-    this.router.post('/registration', this._registration);
+    this.router.post('/login', validate(loginSchema), this._login);
+    this.router.post('/registration', validate(registrationSchema), this._registration);
   }
 
-  private async _login (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  private async _login (req: Request, res: Response, next: NextFunction): Promise<Response> {
     const { login, password } = req.body;
 
     const user = await UserService.getUserByLogin(login);

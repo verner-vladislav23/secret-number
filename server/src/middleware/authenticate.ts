@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import UserService from '../services/UserService';
 import * as jwt from 'jsonwebtoken';
+
+import { UserService } from '../services';
 import { HttpStatus } from '../helpers/HttpStatus';
+import { User } from '../db/models';
 
 const parseBearerToken = (req: Request): string | undefined => {
   const token = req.headers ? req.headers.authorization : undefined;
@@ -31,8 +33,9 @@ const authenticate = async (req: ModifiedRequest, res: Response, next: NextFunct
 
     const decoded = jwt.verify(token, 'SECRET_NUMBER_APP');
 
-    const user = await UserService.getUserById(decoded.userId);
+    const user: User = await UserService.getUserById(decoded.userId);
     const isExistUser = Boolean(user);
+
     if (isExistUser) {
       req.user = user;
       return next();

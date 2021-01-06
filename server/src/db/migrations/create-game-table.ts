@@ -1,5 +1,5 @@
-import DB from '../Postgre';
 import { QueryResult } from 'pg';
+import DB from '../Postgre';
 
 type SqlQuery = string
 

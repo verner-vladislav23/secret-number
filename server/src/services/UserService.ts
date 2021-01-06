@@ -1,11 +1,12 @@
 import DB from '../db/Postgre';
 import { QueryResult } from 'pg';
 import * as bcrypt from 'bcrypt';
+import { User } from '../db/models/User';
 
 type SqlQuery = string
 
 class UserService {
-  static async getUserByLogin (login: string) {
+  public static async getUserByLogin (login: string): Promise<User | undefined> {
     const GET_USER_BY_LOGIN_QUERY: SqlQuery = `
       SELECT * FROM "User" WHERE login = $1;
     `;
@@ -23,7 +24,7 @@ class UserService {
     }
   }
 
-  static async getUserById (id: number) {
+  public static async getUserById (id: number): Promise<User | undefined> {
     const GET_USER_BY_ID_QUERY: SqlQuery = `
       SELECT * FROM "User" WHERE id = $1
     `;
@@ -42,7 +43,7 @@ class UserService {
     }
   }
 
-  static async createUser (user) {
+  public static async createUser (user): Promise<User | undefined> {
     const CREATE_USER_QUERY: SqlQuery = `
       INSERT INTO "User" (name, login, password)
       VALUES ($1, $2, $3);
