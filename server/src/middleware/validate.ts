@@ -6,7 +6,6 @@ const validate = (
 ): Handler => async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    console.log(typeof req.body.password);
     const params = { ...req.body, ...req.query, ... req.params };
     await schema.validate(params);
 

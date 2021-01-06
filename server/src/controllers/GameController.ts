@@ -5,6 +5,8 @@ import { GameService } from '../services';
 import { HttpStatus } from '../helpers/HttpStatus';
 import { Game, User } from '../db/models';
 import authenticate from '../middleware/authenticate';
+import validate from '../middleware/validate';
+import { startGameSchema, moveGameSchema } from '../schemas/game';
 
 interface ModifiedRequest extends Request {
   user?: any;
@@ -14,8 +16,8 @@ class GameController extends BaseController {
   constructor () {
     super();
 
-    this.router.post('/start', authenticate, this._start);
-    this.router.post('/:id/move', authenticate, this._move);
+    this.router.post('/start', authenticate, validate(startGameSchema), this._start);
+    this.router.post('/:id/move', authenticate, validate(moveGameSchema), this._move);
   }
 
   private async _start (req: ModifiedRequest, res: Response, next: NextFunction): Promise<Response> {
@@ -23,7 +25,6 @@ class GameController extends BaseController {
     const user:User = req.user;
 
     try {
-      // const gameId = 11;
       const game: Game = await GameService.createGame(user.id, level);
 
       return res

@@ -14,6 +14,7 @@ type RegistrationSchema = LoginSchema & {
 const loginSchema: SchemaOf<LoginSchema> = yup.object({
   login: yup
     .string()
+    .strict()
     .required().
     test(
     'correctLogin',
