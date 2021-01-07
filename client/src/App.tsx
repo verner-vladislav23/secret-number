@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 
 import ROUTES from './routes';
+import { AuthService } from './services'
 
 interface PrivateRouteProps extends RouteProps {
   component: React.FC,
@@ -36,11 +37,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = (props) => {
 };
 
 function App() {
-
-  const [isAuth, setIsAuth] = React.useState<boolean>(true);
-  React.useEffect(() => {
-    setIsAuth(false);
-  }, []);
+  const isAuth: boolean = AuthService.isAuth;
 
   return (
     <Router>

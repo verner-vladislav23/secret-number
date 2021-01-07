@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Row,
   Col,
@@ -7,7 +8,7 @@ import {
   Form,
 } from 'antd';
 
-import { AuthService } from '../../services'
+import AuthService from '../../services/AuthService';
 
 const layout = {
   labelCol: { span: 8 },
@@ -19,16 +20,22 @@ const tailLayout = {
 };
 
 const RegistrationPage: React.FC = () => {
+  const history = useHistory();
+
   const [form] = Form.useForm();
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = React.useCallback(async (values: any) => {
+      try {
+        const { token } = await AuthService.registration(values);
+        AuthService.setToken(token);
 
-    try {
-      const token = await AuthService.registration(values);
-    } catch (error) {
-      console.log(error)
-    }
-  };
+        if (Boolean(token)) {
+          history.push('/app');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+  }, [history]);
 
   return (
     <Row style={{ marginTop: '20%' }} justify="center" align="middle">

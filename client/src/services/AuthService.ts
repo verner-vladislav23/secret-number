@@ -1,26 +1,26 @@
+import HttpService from './HttpService'
 
-const URL: string = "http://localhost:3001/api/v1";
+class AuthService extends HttpService {
+  private static storageTokenKey:string = '@user_t';
 
-class AuthService {
-  static async parseResponse (response: any): Promise<any> {
-    return await response.json();
+  public static get token (): string | null {
+    return localStorage.getItem(this.storageTokenKey);
   }
 
-  static async registration (payload: any) {
-    const response = await fetch(`${URL}/auth/registration`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        "access-control-allow-origin" : "*",
-      },
-      body: JSON.stringify(payload)
-    });
-
-    return this.parseResponse(response);
+  public static setToken (token: string): void {
+    localStorage.setItem(this.storageTokenKey, token);
   }
 
-  static login () {
+  static get isAuth (): boolean {
+    return Boolean(localStorage.getItem(this.storageTokenKey))
+  }
 
+  public static async registration (payload: any) {
+    return await this.post('/auth/registration', payload);
+  }
+
+  public static async login (payload: any) {
+    return await this.post('/auth/login', payload);
   }
 }
 
