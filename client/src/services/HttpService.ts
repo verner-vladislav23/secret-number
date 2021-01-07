@@ -1,4 +1,4 @@
-
+import AuthService from './AuthService';
 
 class HttpService {
   protected static URL: string | undefined = process.env.REACT_APP_API_URL;
@@ -7,10 +7,24 @@ class HttpService {
     return await response.json();
   }
 
-  public static async post (endPointUrl: string, payload: any) {
+  public static async post (endPointUrl: string, payload?: any) {
     const response = await fetch(`${this.URL}${endPointUrl}`, {
       method: 'POST',
       headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    });
+
+    return this.parseResponse(response);
+  }
+
+  // TODO: Передалть
+  public static async postAuth (endPointUrl: string, payload?: any) {
+    const response = await fetch(`${this.URL}${endPointUrl}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${AuthService.token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload)

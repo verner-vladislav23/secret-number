@@ -7,12 +7,12 @@ class AuthService extends HttpService {
     return localStorage.getItem(this.storageTokenKey);
   }
 
-  public static setToken (token: string): void {
-    localStorage.setItem(this.storageTokenKey, token);
+  public static get isAuth (): boolean {
+    return Boolean(localStorage.getItem(this.storageTokenKey))
   }
 
-  static get isAuth (): boolean {
-    return Boolean(localStorage.getItem(this.storageTokenKey))
+  public static setToken (token: string): void {
+    localStorage.setItem(this.storageTokenKey, token);
   }
 
   public static async registration (payload: any) {
