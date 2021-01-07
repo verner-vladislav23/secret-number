@@ -18,9 +18,10 @@ class GameController extends BaseController {
 
     this.router.post('/start', authenticate, validate(startGameSchema), this._start);
     this.router.post('/:id/move', authenticate, validate(moveGameSchema), this._move);
+    this.router.get('/all', authenticate, this._list);
   }
 
-  private async _start (req: ModifiedRequest, res: Response, next: NextFunction): Promise<Response> {
+  private async _start (req: ModifiedRequest, res: Response, next: NextFunction): Promise<Response | void> {
     const { level } = req.body;
     const user:User = req.user;
 
@@ -35,10 +36,11 @@ class GameController extends BaseController {
         })
     } catch (error) {
       console.log(error);
+      return next(error);
     }
   }
 
-  private async _move (req: Request, res: Response, next: NextFunction): Promise<Response> {
+  private async _move (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     const { secretNumber } = req.body;
     const gameId = req.params.id;
 
@@ -51,9 +53,25 @@ class GameController extends BaseController {
         .send({
           comparedNumber,
           finished,
-        })
+        });
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      return next(error);
+    }
+  }
+
+  private async _list (req: ModifiedRequest, res: Response, next: NextFunction): Promise<Response | void> {
+    const user:User = req.user;
+
+    try {
+      const games = await GameService.getGamesByUser(user.id);
+
+      return res
+        .status(HttpStatus.OK)
+        .send({ games });
+    } catch (error) {
+      console.log(error);
+      return next(error)
     }
   }
 }

@@ -79,6 +79,24 @@ class GameService {
       console.log(error);
     }
   }
+
+  static async getGamesByUser (userId: number): Promise<Game[]> {
+    const GET_GAMES_BY_USER: SqlQuery = `
+      SELECT id, level, created_at, updated_at 
+      FROM "Game" WHERE user_id = $1
+    `;
+
+    try {
+      const result: QueryResult = await DB.pool.query(
+        GET_GAMES_BY_USER,
+        [userId]
+      );
+
+      return result.rows;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default GameService;
