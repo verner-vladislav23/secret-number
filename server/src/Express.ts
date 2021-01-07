@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
+const cors = require('cors');
 
 import gameController from './controllers/GameController';
 import authController from './controllers/AuthController';
@@ -15,6 +16,10 @@ class Express {
 
   private applyPreMiddlewares(): void {
     this.app.use(bodyParser.json());
+    this.app.use(cors({
+      origin: '*',
+      optionsSuccessStatus: 200,
+    }));
   }
 
   private applyRoutes(): void {
