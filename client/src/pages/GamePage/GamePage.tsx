@@ -9,15 +9,6 @@ import {
 
 import GameService  from '../../services/GameService';
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 12 },
-};
-
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
-
 const GamePage: React.FC = () => {
   const [gameId, setGameId] = React.useState<number | null>(null);
   const [secretNumber, setSecretNumber] = React.useState<string>('');
