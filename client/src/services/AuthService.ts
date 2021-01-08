@@ -19,7 +19,7 @@ class AuthService extends HttpService {
     return this.post('/auth/registration', payload);
   }
 
-  public static async login (payload: any) {
+  public static login (payload: any) {
     return this.post('/auth/login', payload);
   }
 }

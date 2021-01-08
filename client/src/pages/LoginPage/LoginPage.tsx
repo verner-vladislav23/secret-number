@@ -11,10 +11,7 @@ import {
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 import AuthService from '../../services/AuthService';
-import {
-  isCorrectLogin,
-  isCorrectPassword
-} from "../../utils/validators";
+import { isCorrectLogin, isCorrectPassword } from "../../utils/validators";
 
 const LoginPage: React.FC = () => {
   const history = useHistory();

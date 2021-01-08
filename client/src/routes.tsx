@@ -1,5 +1,6 @@
 import {
   GamePage,
+  GamesPage,
   LoginPage,
   RegistrationPage,
 } from './pages'
@@ -9,7 +10,7 @@ const ROUTES = [
   {
     path: '/',
     private: true,
-    component: GamePage,
+    component: GamesPage,
   },
   {
     path: '/auth/registration',

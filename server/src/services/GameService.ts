@@ -99,6 +99,7 @@ class GameService {
         level,
         created_at,
         updated_at,
+        finish_at,
         (
           SELECT COUNT(*) FROM "Move" AS move
           WHERE move.game_id = game.id

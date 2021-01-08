@@ -1,13 +1,9 @@
 import React from 'react';
-import {
-  Button,
-  Col,
-  Input,
-  Select,
-  Row
-} from 'antd';
+import {Button, Col, Input, Row, Select} from 'antd';
 
-import GameService  from '../../services/GameService';
+import {GameLevel} from '../../types/Game';
+import {GAME_LEVEL_LABELS} from '../../constants/game';
+import GameService from '../../services/GameService';
 
 const GamePage: React.FC = () => {
   const [gameId, setGameId] = React.useState<number | null>(null);

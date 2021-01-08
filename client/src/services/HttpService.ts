@@ -52,6 +52,18 @@ class HttpService {
 
     return this.parseResponse(response);
   }
+
+  public static async get (endPointUrl: string) {
+    const response = await fetch(`${this.URL}${endPointUrl}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${AuthService.token}`,
+        'Content-Type': 'application/json',
+      }
+    });
+
+    return this.parseResponse(response);
+  }
 }
 
 export default HttpService;
