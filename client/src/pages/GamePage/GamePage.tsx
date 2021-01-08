@@ -47,9 +47,9 @@ const GamePage: React.FC = () => {
           <React.Fragment>
             <h2>Уровень сложности</h2>
             <Select value={level} onChange={setLevel}>
-              <Select.Option value={2}>Легкий (2 цифры)</Select.Option>
-              <Select.Option value={4}>Средний (4 цифры)</Select.Option>
-              <Select.Option value={8}>Сложный (8 цифры)</Select.Option>
+              {Object.keys(GAME_LEVEL_LABELS).map((level: string) => (
+                <Select.Option value={Number(level)}>{GAME_LEVEL_LABELS[level]}</Select.Option>
+              ))}
             </Select>
             <Button onClick={onStartGame}>
               НАЧАТЬ ИГРУ

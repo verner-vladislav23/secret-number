@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   message,
   Row,
@@ -6,11 +7,17 @@ import {
   Table,
   Tooltip,
   Button,
+  Modal,
+  Select,
 } from 'antd';
 import moment from 'moment';
 
+import { GAME_LEVEL_LABELS } from '../../constants/game'
+import { GameLevel } from '../../types/Game';
 import { CheckCircleTwoTone, CloseCircleOutlined } from '@ant-design/icons';
 import { GameService } from '../../services';
+
+const { confirm } = Modal;
 
 const columns = [
   {
@@ -30,7 +37,11 @@ const columns = [
   },
   {
     title: 'Сложность',
-    dataIndex: 'level'
+    dataIndex: 'level',
+    render: (level: number) =>
+      <span>
+        {GAME_LEVEL_LABELS[level]}
+      </span>
   },
   {
     title: 'Завершена',
@@ -53,8 +64,11 @@ const columns = [
 ];
 
 const GamesPage: React.FC = () => {
+  const history = useHistory();
+
   const [loading, setLoading] = React.useState<boolean>(false);
   const [games, setGames] = React.useState([]);
+  const [level, setLevel] = React.useState<number>(GameLevel.Normal);
 
   React.useEffect(() => {
     const fetchGames = async () => {
@@ -73,6 +87,38 @@ const GamesPage: React.FC = () => {
     fetchGames();
   }, []);
 
+  const onStartGame = React.useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const { gameId } = await GameService.startGame({ level });
+      history.push(`/games/${gameId}`);
+    } catch (error) {
+      message.error(error.message);
+    }
+
+    setLoading(false);
+  }, [level]);
+
+  const showStartGameModal = () => {
+    confirm({
+      title: 'Выберите уровень сложности',
+      content: (
+        <Select value={level} onChange={setLevel}>
+          {Object.keys(GAME_LEVEL_LABELS).map((level: string) => (
+            <Select.Option value={Number(level)}>
+              {`${GAME_LEVEL_LABELS[level]}`}
+            </Select.Option>
+          ))}
+        </Select>
+      ),
+      onOk: onStartGame,
+      onCancel() {},
+      okText: 'Старт',
+      cancelText: 'Отмена'
+    });
+  };
+
   return (
     <Row justify="center" align="middle">
       <Col md={12} xs={12}>
@@ -81,7 +127,7 @@ const GamesPage: React.FC = () => {
             <h3>Мои Игры</h3>
           </Col>
           <Col>
-            <Button>
+            <Button onClick={showStartGameModal}>
               Новая игра
             </Button>
           </Col>
