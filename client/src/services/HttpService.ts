@@ -1,5 +1,19 @@
 import AuthService from './AuthService';
 
+class ApiError extends Error {
+  public status: number;
+  public name: string;
+
+  constructor(message: string, status?: number) {
+    super(message);
+
+    this.name = this.constructor.name;
+    Error.captureStackTrace(this, this.constructor);
+    this.status = status || 500;
+  }
+}
+
+
 class HttpService {
   protected static URL: string | undefined = process.env.REACT_APP_API_URL;
 
@@ -15,6 +29,12 @@ class HttpService {
       },
       body: JSON.stringify(payload)
     });
+
+    if (!response.ok) {
+      const { status } = response;
+      const { errorMessage } = await this.parseResponse(response);
+      throw new ApiError(errorMessage, status);
+    }
 
     return this.parseResponse(response);
   }

@@ -24,7 +24,7 @@ class AuthController extends BaseController {
       return res
         .status(HttpStatus.UNAUTHORIZED)
         .send({
-          error: 'Not Authorized'
+          errorMessage: 'Некорректный логин или пароль'
         })
     }
 
@@ -34,7 +34,7 @@ class AuthController extends BaseController {
       return res
         .status(HttpStatus.UNAUTHORIZED)
         .send({
-          error: 'Not Authorized'
+          errorMessage: 'Некорректный логин или пароль'
         });
     }
 
@@ -57,7 +57,7 @@ class AuthController extends BaseController {
       return res
         .status(HttpStatus.BAD_REQUEST)
         .json({
-          error: 'Такой login уже существует',
+          errorMessage: 'Такой логин уже существует',
         })
     }
     const user = await UserService.createUser({

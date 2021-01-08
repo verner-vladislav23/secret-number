@@ -15,12 +15,12 @@ class AuthService extends HttpService {
     localStorage.setItem(this.storageTokenKey, token);
   }
 
-  public static async registration (payload: any) {
-    return await this.post('/auth/registration', payload);
+  public static registration (payload: any) {
+    return this.post('/auth/registration', payload);
   }
 
   public static async login (payload: any) {
-    return await this.post('/auth/login', payload);
+    return this.post('/auth/login', payload);
   }
 }
 

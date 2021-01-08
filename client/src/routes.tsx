@@ -7,7 +7,7 @@ import {
 
 const ROUTES = [
   {
-    path: '/app',
+    path: '/',
     private: true,
     component: GamePage,
   },

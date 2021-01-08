@@ -2,8 +2,8 @@ import React from 'react';
 import {
   Button,
   Col,
-  Form,
   Input,
+  Select,
   Row
 } from 'antd';
 
@@ -13,10 +13,14 @@ const GamePage: React.FC = () => {
   const [gameId, setGameId] = React.useState<number | null>(null);
   const [secretNumber, setSecretNumber] = React.useState<string>('');
   const [comparedNumber, setComparedNumber] = React.useState<string>('');
+  const [level, setLevel] = React.useState<number>(4);
 
   const onStartGame = async () => {
     try {
-      const { gameId } = await GameService.startGame();
+      const { gameId } = await GameService.startGame({
+        level,
+      });
+
       setGameId(gameId);
     } catch (error) {
       console.log(error);
@@ -26,7 +30,7 @@ const GamePage: React.FC = () => {
   const onMove = async () => {
     try {
       const { comparedNumber } = await GameService.move(gameId, {
-        secretNumber
+        secretNumber,
       });
       setComparedNumber(comparedNumber);
     } catch (error) {
@@ -44,13 +48,21 @@ const GamePage: React.FC = () => {
     <Row style={{ marginTop: '20%' }} justify="center" align="middle">
       <Col span={10}>
         {!Boolean(gameId) ? (
-          <Button onClick={onStartGame}>
-            НАЧАТЬ ИГРУ
-          </Button>
+          <React.Fragment>
+            <h2>Уровень сложности</h2>
+            <Select value={level} onChange={setLevel}>
+              <Select.Option value={2}>Легкий (2 цифры)</Select.Option>
+              <Select.Option value={4}>Средний (4 цифры)</Select.Option>
+              <Select.Option value={8}>Сложный (8 цифры)</Select.Option>
+            </Select>
+            <Button onClick={onStartGame}>
+              НАЧАТЬ ИГРУ
+            </Button>
+          </React.Fragment>
         ) : (
           <React.Fragment>
             <h1>{comparedNumber}</h1>
-            <Input value={secretNumber} onChange={onInputSecretNumber} placeholder='Enter secret number'/>
+            <Input value={secretNumber} onChange={onInputSecretNumber} placeholder='Введите секретно число'/>
             <Button onClick={onMove}>
               Угадать число
             </Button>
