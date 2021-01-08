@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.10",
     "antd": "^4.10.0",
     "moment": "^2.29.1",
+    "query-params": "0.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",

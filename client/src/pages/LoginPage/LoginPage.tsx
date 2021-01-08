@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
       AuthService.setToken(token);
 
       if (Boolean(token)) {
-        history.push('/');
+        history.push('/games');
       }
     } catch (error) {
       message.error(error.message);

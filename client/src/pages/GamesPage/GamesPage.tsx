@@ -53,7 +53,7 @@ const columns = [
         const dateFormatted = moment(finishAt).format('DD.MM.YY HH:mm:ss');
         return (
           <React.Fragment>
-            <Tooltip title={dateFormatted} placement='top'>
+            <Tooltip title={`Завершена ${dateFormatted}`} placement='top'>
               <CheckCircleTwoTone twoToneColor="#52c41a"/>
             </Tooltip>
           </React.Fragment>
@@ -122,7 +122,7 @@ const GamesPage: React.FC = () => {
   return (
     <Row justify="center" align="middle">
       <Col md={12} xs={12}>
-        <Row style={{ marginBottom: '10px' }} justify='space-between'>
+        <Row style={{ marginBottom: '10px', marginTop: '100px' }} justify='space-between'>
           <Col>
             <h3>Мои Игры</h3>
           </Col>
@@ -139,6 +139,7 @@ const GamesPage: React.FC = () => {
           loading={loading}
           columns={columns}
           size='small'
+          pagination={false}
         />
       </Col>
     </Row>

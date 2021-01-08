@@ -32,7 +32,7 @@ const RegistrationPage: React.FC = () => {
         AuthService.setToken(token);
 
         if (Boolean(token)) {
-          history.push('/app');
+          history.push('/games');
         }
       } catch (error) {
         message.error(error.message)

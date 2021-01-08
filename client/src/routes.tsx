@@ -8,9 +8,14 @@ import {
 
 const ROUTES = [
   {
-    path: '/',
+    path: '/games',
     private: true,
     component: GamesPage,
+  },
+  {
+    path: '/games/:id',
+    private: true,
+    component: GamePage,
   },
   {
     path: '/auth/registration',

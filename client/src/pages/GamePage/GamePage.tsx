@@ -1,38 +1,40 @@
 import React from 'react';
-import {Button, Col, Input, Row, Select} from 'antd';
+import { useParams } from 'react-router-dom';
+import {
+  Button,
+  Col,
+  Input,
+  Row,
+  Card,
+  Typography, message
+} from 'antd';
 
-import {GameLevel} from '../../types/Game';
-import {GAME_LEVEL_LABELS} from '../../constants/game';
 import GameService from '../../services/GameService';
 
+const { Title } = Typography;
+
 const GamePage: React.FC = () => {
-  const [gameId, setGameId] = React.useState<number | null>(null);
+  const { id: gameId } = useParams<{ id: string | undefined }>();
+
+  const [comparing, setComparing] = React.useState<boolean>(false);
   const [secretNumber, setSecretNumber] = React.useState<string>('');
   const [comparedNumber, setComparedNumber] = React.useState<string>('');
-  const [level, setLevel] = React.useState<number>(4);
 
-  const onStartGame = async () => {
+  const onMove = React.useCallback(async () => {
+    setComparing(true);
+
     try {
-      const { gameId } = await GameService.startGame({
-        level,
+      const { comparedNumber, finished } = await GameService.move(Number(gameId), {
+        secretNumber
       });
 
-      setGameId(gameId);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onMove = async () => {
-    try {
-      const { comparedNumber } = await GameService.move(gameId, {
-        secretNumber,
-      });
       setComparedNumber(comparedNumber);
     } catch (error) {
-      console.log(error)
+      message.error(error.message);
     }
-  };
+
+    setComparing(false);
+  }, [secretNumber]);
 
   const onInputSecretNumber = (event: any) => {
     const { target: { value: secretNumber }} = event;
@@ -41,29 +43,28 @@ const GamePage: React.FC = () => {
   };
 
   return (
-    <Row style={{ marginTop: '20%' }} justify="center" align="middle">
-      <Col span={10}>
-        {!Boolean(gameId) ? (
-          <React.Fragment>
-            <h2>Уровень сложности</h2>
-            <Select value={level} onChange={setLevel}>
-              {Object.keys(GAME_LEVEL_LABELS).map((level: string) => (
-                <Select.Option value={Number(level)}>{GAME_LEVEL_LABELS[level]}</Select.Option>
-              ))}
-            </Select>
-            <Button onClick={onStartGame}>
-              НАЧАТЬ ИГРУ
-            </Button>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <h1>{comparedNumber}</h1>
-            <Input value={secretNumber} onChange={onInputSecretNumber} placeholder='Введите секретно число'/>
-            <Button onClick={onMove}>
-              Угадать число
-            </Button>
-          </React.Fragment>
-        )}
+    <Row style={{ marginTop: '250px' }} justify="center" align="middle">
+      <Col md={4}>
+        <Card style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <Title style={{ letterSpacing: '0.4em'}} level={3}>
+            {comparedNumber}
+          </Title>
+        </Card>
+
+        <Input
+          placeholder='Введите загаданное число'
+          style={{ marginBottom: '20px' }}
+          onChange={onInputSecretNumber}
+        />
+
+        <Button
+          type='primary'
+          style={{ width: '100%'}}
+          onClick={onMove}
+          disabled={comparing}
+        >
+          Проверить
+        </Button>
       </Col>
     </Row>
   )
