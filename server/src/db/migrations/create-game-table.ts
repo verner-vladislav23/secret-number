@@ -37,4 +37,4 @@ const deleteGameTable = async () => {
   }
 };
 
-export { createGameTable, deleteGameTable }
+export { createGameTable, deleteGameTable };

@@ -1,6 +1,8 @@
 import DB from '../db/Postgre';
 import { QueryResult } from 'pg';
+
 import SecretNumberService from './SecretNumberService';
+import MoveService from './MoveService';
 import { Game } from '../db/models';
 
 type SqlQuery = string
@@ -40,34 +42,29 @@ class GameService {
   };
 
   static async move (gameId, inputNumber: string) {
-    const GET_GAME_BY_ID_QUERY: SqlQuery = `
-      SELECT * FROM "Game" WHERE id = $1
-    `;
-
     const SET_FINISH_GAME_BY_ID_QUERY: SqlQuery = `
       UPDATE "Game" SET finish_at = NOW()
       WHERE id = $1
     `;
 
     try {
-      const result: QueryResult = await DB.pool.query(
-        GET_GAME_BY_ID_QUERY,
-        [gameId]
-      );
 
-      const [gameById] = result.rows;
+      const gameById = await this.getGameById(gameId);
       // TODO: Проверка на finished
+
 
       const { secret_number } = gameById;
 
       const comparedNumber: string = SecretNumberService.getComparedNumber(inputNumber, secret_number);
+
+      await MoveService.createMove(gameId, inputNumber);
 
       const finished: boolean = (secret_number === inputNumber);
 
       if (finished) {
         await DB.pool.query(
           SET_FINISH_GAME_BY_ID_QUERY,
-          [gameById.id]
+          [gameById.id],
         );
       }
 
@@ -78,12 +75,36 @@ class GameService {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+
+  static async getGameById (gameId: number): Promise<Game | undefined> {
+    const GET_GAME_BY_ID_QUERY: SqlQuery = `
+      SELECT * FROM "Game" WHERE id = $1
+    `;
+
+    const result: QueryResult = await DB.pool.query(
+      GET_GAME_BY_ID_QUERY,
+      [gameId],
+    );
+
+    const [gameById] = result.rows;
+
+    return gameById;
+  };
 
   static async getGamesByUser (userId: number): Promise<Game[]> {
     const GET_GAMES_BY_USER: SqlQuery = `
-      SELECT id, level, created_at, updated_at 
-      FROM "Game" WHERE user_id = $1
+      SELECT 
+        id,
+        level,
+        created_at,
+        updated_at,
+        (
+          SELECT COUNT(*) FROM "Move" AS move
+          WHERE move.game_id = game.id
+        ) AS count_moves
+      FROM "Game" AS game
+      WHERE user_id = $1
     `;
 
     try {
@@ -96,7 +117,7 @@ class GameService {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 }
 
 export default GameService;
