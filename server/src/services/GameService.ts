@@ -21,24 +21,20 @@ class GameService {
       LIMIT 1
     `;
 
-    try {
-      const secretNumber: string = SecretNumberService.generateSecretNumber(level);
-      await DB.pool.query(
-        CREATE_GAME_QUERY,
-        [userId, secretNumber, level],
-      );
+    const secretNumber: string = SecretNumberService.generateSecretNumber(level);
+    await DB.pool.query(
+      CREATE_GAME_QUERY,
+      [userId, secretNumber, level],
+    );
 
-      const result: QueryResult = await DB.pool.query(
-        GET_LAST_GAME_QUERY,
-        [userId, secretNumber],
-      );
+    const result: QueryResult = await DB.pool.query(
+      GET_LAST_GAME_QUERY,
+      [userId, secretNumber],
+    );
 
-      const [lastGame] = result.rows;
+    const [lastGame] = result.rows;
 
-      return lastGame;
-    } catch (error) {
-      console.log(error);
-    }
+    return lastGame;
   };
 
   static async move (gameId, inputNumber: string) {
@@ -47,34 +43,31 @@ class GameService {
       WHERE id = $1
     `;
 
-    try {
+    const gameById: Game = await this.getGameById(gameId);
 
-      const gameById = await this.getGameById(gameId);
-      // TODO: Проверка на finished
-
-
-      const { secret_number } = gameById;
-
-      const comparedNumber: string = SecretNumberService.getComparedNumber(inputNumber, secret_number);
-
-      await MoveService.createMove(gameId, inputNumber);
-
-      const finished: boolean = (secret_number === inputNumber);
-
-      if (finished) {
-        await DB.pool.query(
-          SET_FINISH_GAME_BY_ID_QUERY,
-          [gameById.id],
-        );
-      }
-
-      return {
-        comparedNumber,
-        finished
-      };
-    } catch (error) {
-      console.log(error);
+    if (Boolean(gameById.finish_at)) {
+      throw new Error('Эта игра уже закончена')
     }
+
+    const { secret_number } = gameById;
+
+    const comparedNumber: string = SecretNumberService.getComparedNumber(inputNumber, secret_number);
+
+    await MoveService.createMove(gameId, inputNumber);
+
+    const finished: boolean = (secret_number === inputNumber);
+
+    if (finished) {
+      await DB.pool.query(
+        SET_FINISH_GAME_BY_ID_QUERY,
+        [gameById.id],
+      );
+    }
+
+    return {
+      comparedNumber,
+      finished
+    };
   };
 
   static async getGameById (gameId: number): Promise<Game | undefined> {
@@ -108,16 +101,12 @@ class GameService {
       WHERE user_id = $1
     `;
 
-    try {
-      const result: QueryResult = await DB.pool.query(
-        GET_GAMES_BY_USER,
-        [userId]
-      );
+    const result: QueryResult = await DB.pool.query(
+      GET_GAMES_BY_USER,
+      [userId]
+    );
 
-      return result.rows;
-    } catch (error) {
-      console.log(error);
-    }
+    return result.rows;
   };
 }
 

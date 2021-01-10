@@ -6,6 +6,7 @@ import { HttpStatus } from '../helpers/HttpStatus';
 import { Game, User } from '../db/models';
 import authenticate from '../middleware/authenticate';
 import validate from '../middleware/validate';
+import errorHandler from '../middleware/errorHandler';
 import { startGameSchema, moveGameSchema } from '../schemas/game';
 
 interface ModifiedRequest extends Request {
@@ -19,6 +20,8 @@ class GameController extends BaseController {
     this.router.post('/start', authenticate, validate(startGameSchema), this.start);
     this.router.post('/:id/move', authenticate, validate(moveGameSchema), this.move);
     this.router.get('/all', authenticate, this.list);
+
+    this.router.use(errorHandler);
   }
 
   public async start (req: ModifiedRequest, res: Response, next: NextFunction): Promise<Response | void> {
@@ -35,7 +38,6 @@ class GameController extends BaseController {
           message: 'Game started'
         })
     } catch (error) {
-      console.log(error);
       return next(error);
     }
   }
@@ -55,8 +57,7 @@ class GameController extends BaseController {
           finished,
         });
     } catch (error) {
-      console.log(error);
-      return next(error);
+      next(error);
     }
   }
 
@@ -70,7 +71,6 @@ class GameController extends BaseController {
         .status(HttpStatus.OK)
         .send({ games });
     } catch (error) {
-      console.log(error);
       return next(error)
     }
   }
