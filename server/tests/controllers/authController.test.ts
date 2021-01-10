@@ -6,41 +6,79 @@ import { HttpStatus } from "../../src/helpers/HttpStatus";
 
 describe('AuthController', () => {
   const CONTENT_TYPE_HEADER: string = 'application/json';
+
   // TODO: полный путь надо доставать из роутинга
   const LOGIN_PATH_ROUTE: string = '/api/v1/auth/login';
+  const REGISTRATION_PATH_ROUTE: string = '/api/v1/auth/registration';
 
-  it(`POST /login without body should return ${HttpStatus.UNPROCESSABLE_ENTITY} status`, async () => {
-    const response = await request(app).post(LOGIN_PATH_ROUTE);
+  describe('POST /login', () => {
 
-    expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+    it(`without body should return ${HttpStatus.UNPROCESSABLE_ENTITY} status`, async () => {
+      const response = await request(app).post(LOGIN_PATH_ROUTE);
+
+      expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it(`empty login should return ${HttpStatus.UNPROCESSABLE_ENTITY} status`, async () => {
+      const mockBody = {
+        login: '',
+        password: ''
+      };
+
+      const response = await request(app)
+        .post(LOGIN_PATH_ROUTE)
+        .set('Content-Type', CONTENT_TYPE_HEADER)
+        .send(mockBody);
+
+      expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(response.body.errors.name).toBe('ValidationError');
+    });
+
+    it('with body: { login: 12, password: 123151251 }', async () => {
+      const mockBody = {
+        login: '12',
+        password: '123151251,'
+      };
+
+      const response = await request(app)
+        .post(LOGIN_PATH_ROUTE)
+        .set('Content-Type', CONTENT_TYPE_HEADER)
+        .send(mockBody);
+
+      expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it('auth default user: name: test, login: test, password: 12345 should return not empty JWT', async () => {
+      const mockBody = {
+        login: 'test',
+        password: '12345'
+      };
+
+      const response = await request(app)
+        .post(LOGIN_PATH_ROUTE)
+        .set('Content-Type', CONTENT_TYPE_HEADER)
+        .send(mockBody);
+
+      expect(response.statusCode).toBe(HttpStatus.OK);
+      expect(response.body.token).not.toBe('');
+    });
   });
 
-  it(`POST /login empty login should return ${HttpStatus.UNPROCESSABLE_ENTITY} status`, async () => {
-    const mockBody = {
-      login: '',
-      password: ''
-    };
+  describe('POST /registration', () => {
+    it(`without name should return ${HttpStatus.UNPROCESSABLE_ENTITY} status`, async () => {
+      const mockBody = {
+        login: 'test',
+        password: '12345'
+      };
 
-    const response = await request(app)
-      .post(LOGIN_PATH_ROUTE)
-      .set('Content-Type', CONTENT_TYPE_HEADER)
-      .send(mockBody);
+      const response = await request(app)
+        .post(REGISTRATION_PATH_ROUTE)
+        .set('Content-Type', CONTENT_TYPE_HEADER)
+        .send(mockBody);
 
-    expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
-    expect(response.body.errors.name).toBe('ValidationError');
-  });
-
-  it('POST /login with body: { login: 12, password: 123151251 }', async () => {
-    const mockBody = {
-      login: '12',
-      password: '123151251,'
-    };
-
-    const response = await request(app)
-      .post(LOGIN_PATH_ROUTE)
-      .set('Content-Type', CONTENT_TYPE_HEADER)
-      .send(mockBody);
-
-    expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+      expect(response.body.errors.name).toBe('ValidationError');
+      expect(response.body.errors.message).toBe('name is a required field');
+    });
   })
 });

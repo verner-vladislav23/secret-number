@@ -5,7 +5,7 @@ describe('NumberService', () => {
   let correctedSymbol: string = SecretNumberService.correctedSymbol;
   let defaultCountMembers: number = SecretNumberService.defaultCountMembers;
 
-  describe('generateRandomNumber method', () => {
+  describe('generateRandomNumber()', () => {
     it('should return type string', () => {
       const secretNumber: string = SecretNumberService.generateSecretNumber();
 
@@ -35,7 +35,7 @@ describe('NumberService', () => {
     });
   });
 
-  describe('getComparedNumber method', () => {
+  describe('getComparedNumber()', () => {
     it('should return type string', () => {
       const comparedNumber: string = SecretNumberService.getComparedNumber('123', '4411');
 

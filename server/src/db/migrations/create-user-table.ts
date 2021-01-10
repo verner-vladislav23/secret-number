@@ -15,8 +15,14 @@ const createUserTable = async () => {
     )
   `;
 
+  const CREATE_DEFAULT_USER_QUERY: SqlQuery = `
+    INSERT INTO "User" (name, login, password),
+    values ("test", "test", "12345")
+  `;
+
   try {
     const result: QueryResult = await DB.pool.query(CREATE_USER_TABLE_QUERY);
+    await DB.pool.query(CREATE_DEFAULT_USER_QUERY);
     console.log(result);
   } catch (error) {
     console.log(error);
