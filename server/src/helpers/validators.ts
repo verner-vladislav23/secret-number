@@ -11,9 +11,13 @@ const isCorrectPassword = (password: string): boolean => {
   return password.length > 4;
 };
 
-const isCorrectLogin = (login: string): boolean => (
-  /^[-a-zA-Z0-9!#$%&'*+\/=?^_`{|}~\-\.]/.test(login)
-);
+const isCorrectLogin = (login: string): boolean => {
+  if (!login) return false;
+
+  if (login.length < 4) return false;
+
+  return /^[-a-zA-Z0-9!#$%&'*+\/=?^_`{|}~\-\.]/.test(login);
+};
 
 const isCorrectName = (name: string): boolean => (
   /^[A-zА-я]/.test(name)

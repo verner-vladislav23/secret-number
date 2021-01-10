@@ -23,6 +23,7 @@ const loginSchema: SchemaOf<LoginSchema> = yup.object({
     ),
   password: yup
     .string()
+    .strict()
     .required()
     .min(5)
     .test(

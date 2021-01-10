@@ -28,7 +28,7 @@ const authenticate = async (req: ModifiedRequest, res: Response, next: NextFunct
     if (!Boolean(token)) {
       return res
         .status(HttpStatus.UNAUTHORIZED)
-        .send({ message: 'Неправильный логин или пароль' });
+        .send({ message: 'Not Authorized' });
     }
 
     const decoded = jwt.verify(token, 'SECRET_NUMBER_APP');
