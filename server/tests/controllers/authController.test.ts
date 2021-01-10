@@ -62,6 +62,21 @@ describe('AuthController', () => {
       expect(response.statusCode).toBe(HttpStatus.OK);
       expect(response.body.token).not.toBe('');
     });
+
+    it('auth with wrong credentials', async () => {
+      const mockBody = {
+        login: 'test5838812',
+        password: '3cds391jdhr'
+      };
+
+      const response = await request(app)
+        .post(LOGIN_PATH_ROUTE)
+        .set('Content-Type', CONTENT_TYPE_HEADER)
+        .send(mockBody);
+
+      expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
+      expect(response.body.errorMessage).toBe('Некорректный логин или пароль');
+    });
   });
 
   describe('POST /registration', () => {
