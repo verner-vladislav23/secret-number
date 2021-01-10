@@ -2,9 +2,11 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 const cors = require('cors');
 
-import gameController from './controllers/GameController';
-import authController from './controllers/AuthController';
-import userController from './controllers/UserController';
+import {
+  authController,
+  gameController,
+  userController
+} from './controllers'
 
 class Express {
   public app: express.Application;

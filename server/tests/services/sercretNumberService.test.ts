@@ -1,4 +1,4 @@
-import SecretNumberService from '../src/services/SecretNumberService';
+import SecretNumberService from '../../src/services/SecretNumberService';
 
 describe('NumberService', () => {
   let presentSymbol: string = SecretNumberService.presentedSymbol;

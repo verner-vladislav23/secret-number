@@ -1,9 +1,9 @@
-import AuthController from './AuthController';
-import GameController from './GameController';
-import BaseController from './BaseController';
+import authController from './AuthController';
+import gameController from './GameController';
+import userController from './UserController';
 
 export {
-  AuthController,
-  GameController,
-  BaseController,
+  authController,
+  gameController,
+  userController,
 }
