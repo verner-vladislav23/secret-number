@@ -16,12 +16,12 @@ class GameController extends BaseController {
   constructor () {
     super();
 
-    this.router.post('/start', authenticate, validate(startGameSchema), this._start);
-    this.router.post('/:id/move', authenticate, validate(moveGameSchema), this._move);
-    this.router.get('/all', authenticate, this._list);
+    this.router.post('/start', authenticate, validate(startGameSchema), this.start);
+    this.router.post('/:id/move', authenticate, validate(moveGameSchema), this.move);
+    this.router.get('/all', authenticate, this.list);
   }
 
-  private async _start (req: ModifiedRequest, res: Response, next: NextFunction): Promise<Response | void> {
+  public async start (req: ModifiedRequest, res: Response, next: NextFunction): Promise<Response | void> {
     const { level } = req.body;
     const user:User = req.user;
 
@@ -40,7 +40,7 @@ class GameController extends BaseController {
     }
   }
 
-  private async _move (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  public async move (req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     const { secretNumber } = req.body;
     const gameId = req.params.id;
 
@@ -60,7 +60,7 @@ class GameController extends BaseController {
     }
   }
 
-  private async _list (req: ModifiedRequest, res: Response, next: NextFunction): Promise<Response | void> {
+  public async list (req: ModifiedRequest, res: Response, next: NextFunction): Promise<Response | void> {
     const user:User = req.user;
 
     try {

@@ -107,7 +107,7 @@ const GamesPage: React.FC = () => {
         <Select value={level} onChange={setLevel}>
           {Object.keys(GAME_LEVEL_LABELS).map((level: string) => (
             <Select.Option value={Number(level)}>
-              {`${GAME_LEVEL_LABELS[level]}`}
+              {GAME_LEVEL_LABELS[level]}
             </Select.Option>
           ))}
         </Select>

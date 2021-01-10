@@ -12,11 +12,10 @@ class UserController extends BaseController {
   constructor() {
     super();
 
-    this.router.get('/current', authenticate, this._current);
+    this.router.get('/current', authenticate, this.current);
   }
 
-
-  private _current (req: ModifiedRequest, res: Response, next: NextFunction): Response {
+  public current (req: ModifiedRequest, res: Response, next: NextFunction): Response {
     const user: User = req.user;
 
     return res.status(200).json(user);

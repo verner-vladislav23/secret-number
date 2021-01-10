@@ -36,19 +36,34 @@ const PrivateRoute: React.FC<PrivateRouteProps> = (props) => {
   )
 };
 
+const AuthContext = React.createContext({
+  isAuth: false,
+  user: null,
+  fetchUser: () => console.log('fetching'),
+});
+
+
 function App() {
+  const [user, setUser] = React.useState(null);
   const isAuth: boolean = AuthService.isAuth;
 
+  // const fetchUser = () => {
+  //   setUser(prevState => ({
+  //     name: 'User'
+  //   }))
+  // }
+
   return (
-    <Router>
+      <Router>
         <Switch>
           {ROUTES.map((route, index) => (
-            route.private
-              ? <PrivateRoute key={index} exact isAuth={isAuth} {...route}/>
-              : <Route key={index} exact component={route.component} path={route.path}/>
+            route.private && AuthService.isAuth
+              ? <PrivateRoute key={index} isAuth={isAuth} {...route} />
+              : <Route key={index} component={route.component} path={route.path} />
           ))}
+          <Route render={() => <Redirect to='/games'/>} />
         </Switch>
-    </Router>
+      </Router>
   );
 }
 

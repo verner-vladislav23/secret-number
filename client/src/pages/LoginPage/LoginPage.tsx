@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import {
   Row,
@@ -23,10 +23,9 @@ const LoginPage: React.FC = () => {
     setSubmitting(true);
     try {
       const { token } = await AuthService.login(values);
-      AuthService.setToken(token);
 
       if (Boolean(token)) {
-        history.push('/games');
+        AuthService.setToken(token);
       }
     } catch (error) {
       message.error(error.message);

@@ -34,7 +34,7 @@ const GamePage: React.FC = () => {
     }
 
     setComparing(false);
-  }, [secretNumber]);
+  }, [secretNumber, gameId]);
 
   const onInputSecretNumber = (event: any) => {
     const { target: { value: secretNumber }} = event;

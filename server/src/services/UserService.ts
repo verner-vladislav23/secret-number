@@ -11,17 +11,13 @@ class UserService {
       SELECT * FROM "User" WHERE login = $1;
     `;
 
-    try {
-      const result: QueryResult = await DB.pool.query(
-        GET_USER_BY_LOGIN_QUERY,
-        [login]
-      );
-      const [user] = result.rows;
+    const result: QueryResult = await DB.pool.query(
+      GET_USER_BY_LOGIN_QUERY,
+      [login]
+    );
+    const [user] = result.rows;
 
-      return user;
-    } catch (error) {
-      console.log(error);
-    }
+    return user;
   }
 
   public static async getUserById (id: number): Promise<User | undefined> {
@@ -49,21 +45,17 @@ class UserService {
       VALUES ($1, $2, $3);
     `;
 
-    try {
-      const { name, login, password } = user;
-      const hashedPassword: string = bcrypt.hashSync(password, 10);
+    const { name, login, password } = user;
+    const hashedPassword: string = bcrypt.hashSync(password, 10);
 
-      await DB.pool.query(
-        CREATE_USER_QUERY,
-        [name, login, hashedPassword]
-      );
+    await DB.pool.query(
+      CREATE_USER_QUERY,
+      [name, login, hashedPassword]
+    );
 
-      const createdUser = this.getUserByLogin(login);
+    const createdUser = this.getUserByLogin(login);
 
-      return createdUser;
-    } catch (error) {
-      console.log(error)
-    }
+    return createdUser;
   }
 }
 
