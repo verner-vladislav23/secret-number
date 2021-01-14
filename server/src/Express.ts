@@ -15,6 +15,8 @@ class Express {
     this.app = express();
     this.applyPreMiddlewares();
     this.applyRoutes();
+
+    console.log('test change message git')
   }
 
   private applyPreMiddlewares(): void {
