@@ -16,7 +16,7 @@ class Express {
     this.applyPreMiddlewares();
     this.applyRoutes();
 
-    console.log('test change 1')
+    console.log('test 1')
   }
 
   private applyPreMiddlewares(): void {
